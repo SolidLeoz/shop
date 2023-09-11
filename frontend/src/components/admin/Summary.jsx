@@ -26,7 +26,7 @@ const Summary = () => {
     {
       icon: <FaChartBar />,
       digits: 500,
-      isMoney: false,
+      isMoney: true,
       title: "Earnings",
       color: "rgba(123, 234, 255, 0.68)",
       bgColor: "rgba(132, 234, 255, 0.68, 0.12)",
