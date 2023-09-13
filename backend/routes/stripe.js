@@ -9,10 +9,20 @@ const stripe = Stripe(process.env.STRIPE_KEY);
 const router = express.Router();
 
 router.post("/create-checkout-session", async (req, res) => {
+  // Estrai solo le informazioni essenziali da req.body.cartItems
+  const cartItems = req.body.cartItems.map((item) => ({
+    id: item.id,
+    name: item.name,
+    desc: item.desc,
+    price: item.price,
+    cartQuantity: item.cartQuantity,
+  }));
+
   const customer = await stripe.customers.create({
     metadata: {
       userId: req.body.userId,
-      cartItemscount: req.body.cartItems.length,
+      cartItemsCount: cartItems.length,
+      cart: JSON.stringify(cartItems),
     },
   });
 
