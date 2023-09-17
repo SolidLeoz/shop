@@ -16,6 +16,7 @@ router.post("/create-checkout-session", async (req, res) => {
     desc: item.desc,
     price: item.price,
     cartQuantity: item.cartQuantity,
+    size: item.size,
   }));
 
   const customer = await stripe.customers.create({
@@ -36,6 +37,7 @@ router.post("/create-checkout-session", async (req, res) => {
           description: item.desc,
           metadata: {
             id: item.id,
+            size: item.size,
           },
         },
         unit_amount: item.price * 100,
@@ -184,6 +186,28 @@ router.post(
           try {
             // CREATE ORDER
             createOrder(customer, data);
+
+            // Aggiorna la quantità dei prodotti venduti nel database
+            const items = JSON.parse(customer.metadata.cart);
+
+            for (const item of items) {
+              const product = await Product.findById(item.id);
+
+              if (product) {
+                // Trova la taglia corrispondente
+                const sizeToUpdate = product.sizes.find(
+                  (size) => size.size === item.size
+                );
+
+                if (sizeToUpdate && sizeToUpdate.quantity >= item.cartQuantity) {
+                  // Sottrai la quantità venduta
+                  sizeToUpdate.quantity -= item.cartQuantity;
+
+                  // Salva il prodotto aggiornato
+                  await product.save();
+                }
+              }
+            }
           } catch (err) {
             console.log(typeof createOrder);
             console.log(err);
