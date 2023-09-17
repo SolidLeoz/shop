@@ -6,10 +6,15 @@ import axios from "axios";
 import { setHeaders, url } from "../../slices/api";
 
 const Summary = () => {
+
   const [users, setUsers] = useState([])
   const [usersPerc, setUsersPerc] = useState(0)
+
   const [orders, setOrders] = useState([])
   const [ordersPerc, setOrdersPerc] = useState(0)
+  
+  const [income, setIncome] = useState([])
+  const [incomePerc, setIncomePerc] = useState(0)
 
   console.log("orders", orders)
   console.log("ordersP", ordersPerc)
@@ -55,6 +60,28 @@ const Summary = () => {
 
     fetchData()
   }, [])
+  
+  
+  //Fetch Income Stats
+  
+  useEffect(() =>{
+    async function fetchData(){
+      try {
+        const res = await axios.get(`${url}/orders/income/stats`, setHeaders())
+        res.data.sort(compare)
+        setIncome(res.data);
+        setIncomePerc(((res.data[0].total - res.data[1].total) / res.data[1].total) * 100 );
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+
+
+
   const data = [
     {
       icon: <FaUsers />,

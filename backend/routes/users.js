@@ -4,9 +4,9 @@ const moment = require("moment");
 
 const router = require("express").Router();
 
+// GET user stats
 
-
-router.get("/stats", async (req, res) => {
+router.get("/stats", isAdmin, async (req, res) => {
     const previusMonth = moment()
     .month(moment().month() - 1)
     .set("date", 1)
@@ -35,7 +35,7 @@ router.get("/stats", async (req, res) => {
         res.status(500).sendStatus(err);
     }
 
-    res.send(previusMonth);
+    // res.send(previusMonth);
 });
 
 module.exports = router;

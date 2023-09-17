@@ -1,5 +1,8 @@
-const { Order } = require("../models/Order");
+const { Order } = require("../models/order");
+// const { Order } = require("../models/order");
 const { auth, isUser, isAdmin } = require("../middleware/auth");
+const moment = require("moment");
+
 
 const router = require("express").Router();
 
@@ -95,4 +98,77 @@ router.get("/income", isAdmin, async (req, res) => {
   }
 });
 
+//GET orders stats
+
+router.get("/stats", isAdmin, async (req, res) => {
+  const previusMonth = moment()
+  .month(moment().month() - 1)
+  .set("date", 1)
+  .format("YYYY-MM-DD HH:mm:ss");
+
+  try {
+      const orders = await Order.aggregate([
+          {
+              $match: { createdAt: { $gte: new Date(previusMonth)}},
+          },
+          {
+              $project:{
+                  month: {$month: "$createdAt"}
+              }
+          },
+          {
+              $group:{
+                  _id: "$month",
+                  total: {$sum: 1}
+              }
+          }
+      ]);
+      res.status(200).send(orders)
+  } catch (err) {
+      console.log(err);
+      res.status(500).sendStatus(err);
+  }
+
+  // res.send(previusMonth);
+});
+
 module.exports = router;
+
+//GET Income stats
+
+module.exports = router;
+router.get("/income/stats", isAdmin, async (req, res) => {
+  const previusMonth = moment()
+  .month(moment().month() - 1)
+  .set("date", 1)
+  .format("YYYY-MM-DD HH:mm:ss");
+
+  try {
+      const orders = await Order.aggregate([
+          {
+              $match: { createdAt: { $gte: new Date(previusMonth)}},
+          },
+          {
+              $project:{
+                  month: {$month: "$createdAt"},
+                  sales: "$total"
+              }
+          },
+          {
+              $group:{
+                  _id: "$month",
+                  total: {$sum: "$sales"}
+              }
+          }
+      ]);
+      res.status(200).send(income)
+  } catch (err) {
+      console.log(err);
+      res.status(500).sendStatus(err);
+  }
+
+  // res.send(previusMonth);
+});
+
+module.exports = router;
+

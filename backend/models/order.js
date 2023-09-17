@@ -1,11 +1,12 @@
+const { object } = require("joi")
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
     userId: { type: String, required: true },
-    products: [
-      { productId: { type: String }, quantity: { type: Number, default: 1 } },
-    ],
+    CustomerId: { type: String },
+    paymentIntentId: { type: String },
+    products:[],
     subtotal: { type: Number, required: true },
     total: { type: Number, required: true },
     shipping: { type: Object, required: true },
