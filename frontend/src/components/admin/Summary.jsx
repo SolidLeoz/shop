@@ -1,31 +1,82 @@
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FaUsers, FaChartBar, FaClipboard } from "react-icons/fa";
 import Widget from "../summary-components/Widget";
-
+import axios from "axios";
+import { setHeaders, url } from "../../slices/api";
 
 const Summary = () => {
+  const [users, setUsers] = useState([])
+  const [usersPerc, setUsersPerc] = useState(0)
+  const [orders, setOrders] = useState([])
+  const [ordersPerc, setOrdersPerc] = useState(0)
+
+  console.log("orders", orders)
+  console.log("ordersP", ordersPerc)
+  
+  function compare (a, b) {
+    if (a._id < b._id) {
+      return 1;
+    }
+    if (a._id > b._id) {
+      return -1;
+    }
+    return 0;
+  }
+//Fetch Users stats
+  useEffect(() =>{
+    async function fetchData(){
+      try {
+        const res = await axios.get(`${url}/users/stats`, setHeaders())
+        res.data.sort(compare)
+        setUsers(res.data);
+        setUsersPerc(((res.data[0].total - res.data[1].total) / res.data[1].total) * 100 );
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  //Fetch Orders stats
+
+  useEffect(() =>{
+    async function fetchData(){
+      try {
+        const res = await axios.get(`${url}/orders/stats`, setHeaders())
+        res.data.sort(compare)
+        setOrders(res.data);
+        setOrdersPerc(((res.data[0].total - res.data[1].total) / res.data[1].total) * 100 );
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    fetchData()
+  }, [])
   const data = [
     {
       icon: <FaUsers />,
-      digits: 50,
+      digits: users[0]?.total,
       isMoney: false,
       title: "Users",
       color: "rgba(234, 234, 255, 0.68)",
       bgColor: "rgba(234, 234, 255, 0.68, 0.12)",
-      percentage: 30,
+      percentage: usersPerc,
     },
     {
       icon: <FaClipboard />,
-      digits: 50,
+      digits: orders[0]?.total,
       isMoney: false,
       title: "Orders",
       color: "rgba(38, 234, 255, 0.68)",
       bgColor: "rgba(35, 234, 255, 0.68, 0.12)",
-      percentage: 30,
+      percentage: ordersPerc,
     },
     {
       icon: <FaChartBar />,
-      digits: 500,
+      digits: 5000,
       isMoney: true,
       title: "Earnings",
       color: "rgba(123, 234, 255, 0.68)",
