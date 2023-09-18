@@ -103,12 +103,12 @@ const Summary = () => {
     },
     {
       icon: <FaChartBar />,
-      digits: 5000,
+      digits: income[0]?.total,
       isMoney: true,
       title: "Earnings",
       color: "rgba(123, 234, 255, 0.68)",
       bgColor: "rgba(132, 234, 255, 0.68, 0.12)",
-      percentage: 60,
+      percentage: incomePerc,
     },
   ];
 

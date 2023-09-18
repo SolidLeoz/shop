@@ -82,7 +82,7 @@ router.get("/income", isAdmin, async (req, res) => {
       {
         $project: {
           month: { $month: "$createdAt" },
-          sales: "$amount",
+          sales: "$total",
         },
       },
       {
@@ -109,17 +109,17 @@ router.get("/stats", isAdmin, async (req, res) => {
   try {
       const orders = await Order.aggregate([
           {
-              $match: { createdAt: { $gte: new Date(previusMonth)}},
+              $match: { createdAt: { $gte: new Date(previusMonth) } },
           },
           {
               $project:{
-                  month: {$month: "$createdAt"}
+                  month: { $month: "$createdAt" },
               }
           },
           {
               $group:{
                   _id: "$month",
-                  total: {$sum: 1}
+                  total: { $sum: 1 },
               }
           }
       ]);
@@ -146,22 +146,22 @@ router.get("/income/stats", isAdmin, async (req, res) => {
   try {
       const orders = await Order.aggregate([
           {
-              $match: { createdAt: { $gte: new Date(previusMonth)}},
+              $match: { createdAt: { $gte: new Date(previusMonth) } },
           },
           {
               $project:{
-                  month: {$month: "$createdAt"},
+                  month: { $month: "$createdAt" },
                   sales: "$total"
               }
           },
           {
               $group:{
                   _id: "$month",
-                  total: {$sum: "$sales"}
+                  total: { $sum: "$sales" },
               }
           }
       ]);
-      res.status(200).send(income)
+      res.status(200).send(orders)
   } catch (err) {
       console.log(err);
       res.status(500).sendStatus(err);

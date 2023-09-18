@@ -1,6 +1,8 @@
 const express = require("express");
 const Stripe = require("stripe");
 const { Order } = require("../models/order");
+const Product = require("../models/Product"); // #TODO fix product
+
 
 require("dotenv").config();
 
