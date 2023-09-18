@@ -114,14 +114,14 @@ router.get("/stats", isAdmin, async (req, res) => {
           {
               $project:{
                   month: { $month: "$createdAt" },
-              }
+              },
           },
           {
               $group:{
                   _id: "$month",
                   total: { $sum: 1 },
-              }
-          }
+              },
+          },
       ]);
       res.status(200).send(orders)
   } catch (err) {
@@ -132,11 +132,8 @@ router.get("/stats", isAdmin, async (req, res) => {
   // res.send(previusMonth);
 });
 
-module.exports = router;
-
 //GET Income stats
 
-module.exports = router;
 router.get("/income/stats", isAdmin, async (req, res) => {
   const previusMonth = moment()
   .month(moment().month() - 1)
@@ -144,7 +141,7 @@ router.get("/income/stats", isAdmin, async (req, res) => {
   .format("YYYY-MM-DD HH:mm:ss");
 
   try {
-      const orders = await Order.aggregate([
+      const income = await Order.aggregate([
           {
               $match: { createdAt: { $gte: new Date(previusMonth) } },
           },
@@ -152,16 +149,49 @@ router.get("/income/stats", isAdmin, async (req, res) => {
               $project:{
                   month: { $month: "$createdAt" },
                   sales: "$total"
-              }
+              },
           },
           {
               $group:{
                   _id: "$month",
                   total: { $sum: "$sales" },
-              }
-          }
+              },
+          },
       ]);
-      res.status(200).send(orders)
+      res.status(200).send(income)
+  } catch (err) {
+      console.log(err);
+      res.status(500).sendStatus(err);
+  }
+});
+
+
+  //GET 1 week sales
+
+router.get("/week-sales", async (req, res) => {
+  const last7Days = moment()
+  .day(moment().day() - 7)
+  .format("YYYY-MM-DD HH:mm:ss");
+
+  try {
+      const income = await Order.aggregate([
+          {
+              $match: { createdAt: { $gte: new Date(last7Days) } },
+          },
+          {
+              $project:{
+                  day: { $dayOfWeek: "$createdAt" },
+                  sales: "$total"
+              }
+          },
+          {
+              $group:{
+                  _id: "$day",
+                  total: { $sum: "$sales" },
+              },
+          },
+      ]);
+      res.status(200).send(income)
   } catch (err) {
       console.log(err);
       res.status(500).sendStatus(err);

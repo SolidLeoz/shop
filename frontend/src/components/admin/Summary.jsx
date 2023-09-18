@@ -88,8 +88,8 @@ const Summary = () => {
       digits: users[0]?.total,
       isMoney: false,
       title: "Users",
-      color: "rgba(234, 234, 255, 0.68)",
-      bgColor: "rgba(234, 234, 255, 0.68, 0.12)",
+      color: "rgba(102, 108, 255, )",
+      bgColor: "rgba(102, 108, 255, 0.12)",
       percentage: usersPerc,
     },
     {
@@ -97,8 +97,8 @@ const Summary = () => {
       digits: orders[0]?.total,
       isMoney: false,
       title: "Orders",
-      color: "rgba(38, 234, 255, 0.68)",
-      bgColor: "rgba(35, 234, 255, 0.68, 0.12)",
+      color: "rgba(38, 198, 249)",
+      bgColor: "rgba(38, 198, 249, 0.12)",
       percentage: ordersPerc,
     },
     {
@@ -106,8 +106,8 @@ const Summary = () => {
       digits: income[0]?.total,
       isMoney: true,
       title: "Earnings",
-      color: "rgba(123, 234, 255, 0.68)",
-      bgColor: "rgba(132, 234, 255, 0.68, 0.12)",
+      color: "rgba(253, 181, 40)",
+      bgColor: "rgba(253, 181, 40, 0.12)",
       percentage: incomePerc,
     },
   ];
