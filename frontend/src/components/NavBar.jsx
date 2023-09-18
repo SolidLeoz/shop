@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { logoutUser } from "../slices/authSlice";
 import { toast } from "react-toastify";
 
+
 const NavBar = () => {
   const dispatch = useDispatch();
   const { cartTotalQuantity } = useSelector((state) => state.cart);
@@ -14,7 +15,7 @@ const NavBar = () => {
   return (
     <nav className="nav-bar">
       <Link to="/">
-        <h2>OnlineShop</h2>
+        <h2 className="glitch my-5" data-text="BLACKOUT">BLACKOUT</h2>
       </Link>
       <Link to="/cart">
         <div className="nav-bag">
