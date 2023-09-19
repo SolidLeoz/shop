@@ -82,6 +82,10 @@ const SideNav = styled.div`
     margin-bottom: 1rem;
     font-size: 14px;
   }
+  svg {
+    margin-right: 0%.5rem;
+    font-size: 18px;
+  }
 `;
 
 const Content = styled.div`

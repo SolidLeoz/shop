@@ -24,7 +24,7 @@ export default function ProductsList() {
         })
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 70 },
+        { field: 'id', headerName: 'ID', width: 220 },
         { field: 'imageUrl', headerName: 'Image', width: 80, 
         renderCell: (params) => {
             return(
@@ -55,7 +55,7 @@ export default function ProductsList() {
             return(
             <Actions>
                 <Delete>Delete</Delete>
-                <View onClick={() => navigate(`/product/${params.rows.id}`)}>View</View>
+                <View onClick={() => navigate(`/product/${params.row.id}`)}>View</View>
             </Actions>
                 );
 

@@ -1,12 +1,68 @@
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-// min 12.56.12
+import { setHeaders } from "../../slices/api";
+import axios from "axios";
+import { addToCart } from "../../slices/cartSlice";
+// import { constants } from "buffer";
+import { useDispatch } from "react-redux";
+// min 13.08.28
 const Product = () => {
 
-    const params = useParams()
+    const params = useParams();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    return <>Product: {params.id}</>;
+    const [product, setProduct] = useState({});
+    const [loading, setLoading] = useState(false);
+
+    console.log("product", product);
+    
+    useEffect(() => {
+        setLoading(true);
+        async function fetchData() {
+            try {
+                const res = await axios.get(`{url}/products/find/${params.id}`, setHeaders());
+
+                setProduct(res.data);                
+            } catch (err) {
+                console.log(err);
+            }
+            setLoading(false);
+        }
+        fetchData();
+    }, []);
+
+    const handleAddToCart = (product) => {
+        dispatch(addToCart(product));
+        navigate("cart");
+    }
+    // Product: {params.id}
+    return <StyledProduct>
+        <ProductContainer>
+            {loading ? <p>Loading ...</p> : <> 
+            <ImageContainer> 
+                <img src={product.image?.url} alt="product" />
+            </ImageContainer>
+            <ProductDetails>
+                <h3>{product.name}</h3> 
+                <p><span>Brand:</span>{product.brand}</p> 
+                <p><span>Description</span>{product.desc}</p> 
+                <Price>
+                    ${product.price?.toLocaleString()} 
+                </Price> 
+                <button 
+                className="product-add-to-cart" 
+                on-onClick={() => handleAddToCart(product)}
+                >
+                    Add To Cart
+                </button>
+            </ProductDetails>
+            </>}
+        </ProductContainer>
+    </StyledProduct>;
 };
+     
 
 export default Product;
 
