@@ -21,8 +21,6 @@ const Summary = () => {
   const [income, setIncome] = useState([])
   const [incomePerc, setIncomePerc] = useState(0)
 
-  console.log("orders", orders)
-  console.log("ordersP", ordersPerc)
   
   function compare (a, b) {
     if (a._id < b._id) {
