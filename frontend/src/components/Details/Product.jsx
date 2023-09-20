@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { setHeaders } from "../../slices/api";
+import { setHeaders, url } from "../../slices/api";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 import { addToCart } from "../../slices/cartSlice";
 // import { constants } from "buffer";
-import { useDispatch } from "react-redux";
+
 // min 13.08.28
 const Product = () => {
 
@@ -16,13 +17,15 @@ const Product = () => {
     const [product, setProduct] = useState({});
     const [loading, setLoading] = useState(false);
 
-    console.log("product", product);
     
     useEffect(() => {
         setLoading(true);
         async function fetchData() {
             try {
-                const res = await axios.get(`{url}/products/find/${params.id}`, setHeaders());
+                const res = await axios.get(
+                    `${url}/products/find/${params.id}`,
+                    setHeaders()
+                );
 
                 setProduct(res.data);                
             } catch (err) {
@@ -35,22 +38,23 @@ const Product = () => {
 
     const handleAddToCart = (product) => {
         dispatch(addToCart(product));
-        navigate("cart");
-    }
-    // Product: {params.id}
-    return <StyledProduct>
+        navigate("/cart");
+    };
+
+    return (<StyledProduct>
         <ProductContainer>
-            {loading ? <p>Loading ...</p> : <> 
+            {loading ? (
+            <p>Loading ...</p>
+            ) : (
+            <> 
             <ImageContainer> 
                 <img src={product.image?.url} alt="product" />
             </ImageContainer>
             <ProductDetails>
                 <h3>{product.name}</h3> 
-                <p><span>Brand:</span>{product.brand}</p> 
-                <p><span>Description</span>{product.desc}</p> 
-                <Price>
-                    ${product.price?.toLocaleString()} 
-                </Price> 
+                <p><span>Brand:</span>  {product.brand}</p> 
+                <p><span>Description</span> {product.desc}</p> 
+                <Price>${product.price?.toLocaleString()}</Price> 
                 <button 
                 className="product-add-to-cart" 
                 on-onClick={() => handleAddToCart(product)}
@@ -58,9 +62,11 @@ const Product = () => {
                     Add To Cart
                 </button>
             </ProductDetails>
-            </>}
+            </>
+            )}
         </ProductContainer>
-    </StyledProduct>;
+    </StyledProduct>
+    );
 };
      
 

@@ -34,6 +34,27 @@ router.post("/", isAdmin, async (req, res) => {
   }
 });
 
+//GET ALL PRODUCTS
+
+router.get("/", async (req, res) => {
+  const qbrand = req.query.brand;
+  try {
+    let products;
+
+    if (qbrand) {
+      products = await Product.find({
+        brand: qbrand,
+      });
+    } else {
+      products = await Product.find();
+    }
+
+    res.status(200).send(products);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 //GET PRODUCT
 
 router.get("/find/:id", async (req, res) => {
@@ -92,26 +113,6 @@ router.put("/:id", isAdmin, async (req, res) => {
   }
 });
 
-//GET ALL PRODUCTS
-
-router.get("/", async (req, res) => {
-  const qbrand = req.query.brand;
-  try {
-    let products;
-
-    if (qbrand) {
-      products = await Product.find({
-        brand: qbrand,
-      });
-    } else {
-      products = await Product.find();
-    }
-
-    res.status(200).send(products);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
 
 
 module.exports = router;
