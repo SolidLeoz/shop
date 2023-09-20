@@ -10,7 +10,6 @@ const NavBar = () => {
   const { cartTotalQuantity } = useSelector((state) => state.cart);
   const auth = useSelector((state) => state.auth);
 
-  console.log(auth);
 
   return (
     <nav className="nav-bar">
