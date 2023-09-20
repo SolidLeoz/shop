@@ -2,6 +2,7 @@ const { Order } = require("../models/order");
 // const { Order } = require("../models/order");
 const { auth, isUser, isAdmin } = require("../middleware/auth");
 const moment = require("moment");
+// const Product = require("../models/Product"); // #TODO fix product
 
 
 const router = require("express").Router();
@@ -93,6 +94,21 @@ router.get("/income", isAdmin, async (req, res) => {
       },
     ]);
     res.status(200).send(income);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+// Get Orders
+
+router.get("/", isAdmin, async (req, res) => {
+  const query = req.query.new;
+
+  try {
+    const orders = query
+      ? await Order.find().sort({ _id: -1 }).limit(4)
+      : await Order.find().sort({ _id: -1 });
+    res.status(200).send(orders);
   } catch (err) {
     res.status(500).send(err);
   }

@@ -38,7 +38,12 @@ router.post("/", isAdmin, async (req, res) => {
 
 router.get("/find/:id", async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    // const product = await Product.findById(req.params._id);
+    const product = await Product.findById(req.params.id); // Corretto da req.params._id a req.params.id????
+    // if (!product) {
+    //   // Gestisci il caso in cui il prodotto non sia stato trovato
+    //   return res.status(404).send("Prodotto non trovato");
+    // }
     res.status(200).send(product);
   } catch (error) {
     res.status(500).send(error);
