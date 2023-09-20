@@ -8,7 +8,6 @@ const Transactions = () => {
     const [orders, setOrders] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    console.log(orders);
 
     useEffect(() => {
         async function fetchData() {
