@@ -7,13 +7,14 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import productsReducer, { productsFetch } from "./slices/productsSlice";
 import cartReducer, { getTotals } from "./slices/cartSlice";
-import authReducer from "./slices/authSlice";
-import loadUser from "./slices/authSlice";
 import { productsApi } from "./slices/productsApi";
+import authReducer, { loadUser } from "./slices/authSlice";
+import ordersSlice from "./slices/ordersSlice";
 
 const store = configureStore({
   reducer: {
     products: productsReducer,
+    orders: ordersSlice,
     cart: cartReducer,
     auth: authReducer,
     [productsApi.reducerPath]: productsApi.reducer,
@@ -24,7 +25,7 @@ const store = configureStore({
 
 store.dispatch(productsFetch());
 store.dispatch(getTotals());
-// store.dispatch(loadUser());
+store.dispatch(loadUser(null));
 
 ReactDOM.render(
   <React.StrictMode>
