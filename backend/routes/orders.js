@@ -61,14 +61,14 @@ router.get("/find/:userId", isUser, async (req, res) => {
 
 //GET ALL ORDERS
 
-router.get("/", isAdmin, async (req, res) => {
-  try {
-    const orders = await Order.find();
-    res.status(200).send(orders);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
+// router.get("/", isAdmin, async (req, res) => {
+//   try {
+//     const orders = await Order.find();
+//     res.status(200).send(orders);
+//   } catch (err) {
+//     res.status(500).send(err);
+//   }
+// });
 
 // GET MONTHLY INCOME
 
