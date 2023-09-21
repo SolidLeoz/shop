@@ -57,7 +57,7 @@ const Product = () => {
                 <Price>${product.price?.toLocaleString()}</Price> 
                 <button 
                 className="product-add-to-cart" 
-                on-onClick={() => handleAddToCart(product)}
+                onClick={() => handleAddToCart(product)}
                 >
                     Add To Cart
                 </button>
