@@ -78,11 +78,11 @@ router.delete("/:id", isAdmin, async (req, res) => {
     const product = await Product.findById(req.params.id);
 
     if (!product) return res.status(404).send("product not found ...");
-    
+
     if (product.image.public_id) {
       const destroyResponse = await cloudinary.uploader.destroy(
         product.image.public_id
-        );
+      );
 
       if (destroyResponse) {
         const deletedProduct = await Product.findByIdAndDelete(req.params.id);
@@ -96,23 +96,56 @@ router.delete("/:id", isAdmin, async (req, res) => {
   }
 });
 
-//UPDATE
+//EDIT PRODUCT
 
 router.put("/:id", isAdmin, async (req, res) => {
-  try {
-    const updatedProduct = await Product.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: req.body,
-      },
-      { new: true }
-    );
-    res.status(200).send(updatedProduct);
-  } catch (error) {
-    res.status(500).send(error);
+  if (req.body.productImg) {
+    try {
+      const destroyResponse = await cloudinary.uploader.destroy(
+        req.body.product.image.public_id
+      );
+
+      if (destroyResponse) {
+        const uploadedResponse = await cloudinary.uploader.upload(
+          req.body.productImg,
+          {
+            upload_preset: "online-shop",
+          }
+        );
+
+        if (uploadedResponse) {
+          const updatedProduct = await Product.findByIdAndUpdate(
+            req.params.id,
+            {
+              $set: {
+                ...req.body.product,
+                image: uploadedResponse,
+              },
+            },
+            { new: true }
+          );
+
+          res.status(200).send(updatedProduct);
+        }
+      }
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  } else {
+    try {
+      const updatedProduct = await Product.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: req.body.product,
+        },
+        { new: true }
+      );
+      res.status(200).send(updatedProduct);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   }
 });
-
 
 
 module.exports = router;
