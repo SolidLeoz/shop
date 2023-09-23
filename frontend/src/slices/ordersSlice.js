@@ -27,11 +27,11 @@ const ordersSlice = createSlice({
         [ordersFetch.pending]: (state, action) => {
             state.status = "pending";
         },
-        [ordersFetch.pending]: (state, action) => {
+        [ordersFetch.fulfilled]: (state, action) => {
             state.list = action.payload;
             state.status = "success";
         },
-        [ordersFetch.pending]: (state, action) => {
+        [ordersFetch.rejected]: (state, action) => {
             state.status = "rejected";
         },
     }
