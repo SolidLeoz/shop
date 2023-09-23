@@ -23,7 +23,7 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
-//UPDATE
+//UPDATE ORDER
 router.put("/:id", isAdmin, async (req, res) => {
   try {
     const updatedOrder = await Order.findByIdAndUpdate(
@@ -38,6 +38,20 @@ router.put("/:id", isAdmin, async (req, res) => {
     res.status(500).send(err);
   }
 });
+
+// GET AN ORDER 
+router.get("/findOne/:id", auth, async (req,res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+
+    if (req.user._id !== order.userId  || !req.user.isAdmin)
+      return res.status(403).send("Acces denied. Not authorized ...");
+
+    res.status(200).send(order);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+})
 
 //DELETE
 router.delete("/:id", isAdmin, async (req, res) => {
